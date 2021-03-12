@@ -3,25 +3,36 @@ import axios from 'axios';
 import '../App.css'
 
 function Songs() {
-    const [data, setData] = React.useState([] );
- 
-    React.useEffect( ()=>{
-        const fetchData = async () => {
+  const [data, setData] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchResults, setSearchResults] = React.useState([]);
+  const handleChange = event => {
+    setSearchTerm(event.target.value);
+  };
+  React.useEffect(() => {
+    const fetchData = async () => {
       const result = await axios(
         'https://jsonplaceholder.typicode.com/albums',
       );
-      console.log (result.data)
       setData(result.data);
-        };
-        fetchData();
-    }, []);
+    };
+    fetchData();
+  }, []);
   return (
-         <div>
-         {data.map(item => (
-        <ul key={item.objectID}>
-          <a href={item.url}>{item.title}</a>
-        </ul>
-      ))}
+      <div class="grid">
+              <input
+        type="text"
+        placeholder="Search"
+
+      />
+        {data.map(item => (
+          <ul key={item.objectID}>
+          <p> Song Title: Song {item.id} </p>
+          <p> Singer: Singer {item.id} </p>
+          <p> Album: {item.title} </p> Playtime: {(
+          (Math.random() * 6) + 1).toFixed(2) } mins 
+          </ul>
+        ))}
     </div>
   );
 }
