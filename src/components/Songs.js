@@ -1,14 +1,16 @@
 import React from "react";
 import axios from 'axios';
+import { Input, Icon, Item, Container} from 'semantic-ui-react';
 import '../App.css'
 
 function Songs() {
   const [data, setData] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [searchResults, setSearchResults] = React.useState([]);
+
   const handleChange = event => {
     setSearchTerm(event.target.value);
   };
+
   React.useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
@@ -18,22 +20,29 @@ function Songs() {
     };
     fetchData();
   }, []);
-  return (
-      <div class="grid">
-              <input
-        type="text"
-        placeholder="Search"
 
+  let filteredDatas = data.filter(content => { return content.title.indexOf(searchTerm) !== -1 })
+
+  return (
+    <Container>
+      <Icon name = 'search'/>
+      <Input
+        type="text"
+        placeholder="Search for songs..."
+        onChange={e => handleChange(e)}
       />
-        {data.map(item => (
-          <ul key={item.objectID}>
-          <p> Song Title: Song {item.id} </p>
-          <p> Singer: Singer {item.id} </p>
-          <p> Album: {item.title} </p> Playtime: {(
-          (Math.random() * 6) + 1).toFixed(2) } mins 
-          </ul>
-        ))}
-    </div>
+
+      {filteredDatas.map(item => (
+        <Item key={item.objectID}>
+           <Item.Header as='a'>
+    <Icon name = 'headphones'/>
+         Song Title: {item.title}</Item.Header>
+         <Item.Meta> Singer: Singer{item.id} </Item.Meta>
+         <Item.Meta> Album: Album {item.id} </Item.Meta> Playtime: {(
+            (Math.random() * 6) + 1).toFixed(2)} mins
+        </Item>
+      ))}
+    </Container>
   );
 }
 
